@@ -49,6 +49,9 @@ demo 阶段没问题。一旦进入「长会话 + 工具调用 + 多端」，会
 | [11](./11-streaming-markdown.md) | **流式 Markdown 管线** | Worker 协议、latest-wins 队列、未闭合围栏状态机、稳定/不稳定 token 分段 |
 | [12](./12-context-usage-ui.md) | **上下文用量可视化** | 按 system/user/assistant/tool/other 拆分的估算与归一化算法 |
 | [13](./13-porting-checklist.md) | **移植清单** | 分阶段落地路线、React 版关键骨架代码、逐条验收断言 |
+| [14](./14-tools.md) | **工具系统** | 不可变工具值、作用域注册栈、materialize 快照、结算五步管线、权限规则模型、路径安全三道检查 |
+| [15](./15-skills.md) | **技能系统** | 三级渐进式披露、来源与发现、frontmatter 容错、名录 Context Source、远程拉取的五道安全检查 |
+| [16](./16-memory.md) | **记忆系统** | 六层记忆模型及各自的写入/进上下文/失效/淘汰策略；AGENTS.md 生成规范原文 |
 
 ## 包分层（读代码时的地图）
 
@@ -137,6 +140,12 @@ sequenceDiagram
 | `MAX_LINES` | `2_000` | `packages/core/src/tool-output-store.ts:13` | 单次工具输出进入历史的最大行数 |
 | `MAX_BYTES` | `50 * 1024` | `tool-output-store.ts:14` | 单次工具输出进入历史的最大字节数 |
 | `RETENTION` | `7 days` | `tool-output-store.ts:15` | 落盘工具输出的保留期 |
+| `MAX_TIMEOUT_MS` (bash) | `10 min` | `packages/core/src/tool/bash.ts:20` | 单条 shell 命令的超时上限 |
+| `MAX_CAPTURE_BYTES` (bash) | `1 MB` | `tool/bash.ts:21` | shell 输出的**采集**上限（区别于入历史上限） |
+| `MAX_READ_LINES` | `2_000` | `packages/core/src/tool/read-filesystem.ts:11` | read 单次最大行数 |
+| `MAX_MEDIA_INGEST_BYTES` | `20 MB` | `tool/read-filesystem.ts:13` | 图片读取上限 |
+| `FILE_LIMIT` (skill) | `10` | `packages/core/src/tool/skill.ts:15` | 技能文件清单的采样上限 |
+| `skillConcurrency` / `fileConcurrency` | `4` / `8` | `packages/core/src/skill/discovery.ts:12-13` | 远程技能拉取并发度 |
 | `subscriberCapacity` | `256` | `packages/server/src/handlers/event.ts:9` | 单个 SSE 订阅者的有界队列容量 |
 | SSE 心跳 | `15 seconds` | `handlers/event.ts:37` | `: heartbeat\n\n` 注释行 |
 
@@ -177,6 +186,8 @@ sequenceDiagram
 | **P5** | 时间线行投影 + 虚拟滚动 + 滚动锚定 | 09 | 1000 条消息不卡，流式时不跳动 |
 | **P6** | SystemContext + Snapshot + 会话中系统消息 | 01、02 | 改 `AGENTS.md` 后下一轮模型能感知 |
 | **P7** | 压缩 + 用量可视化 | 03、12 | 长会话不再报超窗 |
+| **P8** | 工具系统 + 权限 | 14 | 模型能安全地读写文件、跑命令 |
+| **P9** | 技能 + 记忆分层 | 15、16 | 项目规则常驻、操作手册按需加载 |
 
 **P0–P2 是最小闭环，P6–P7 是长会话产品的分水岭。** 很多团队只做到 P2 就上线，然后在 P3 和 P7 上反复踩坑。
 
