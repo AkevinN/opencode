@@ -1,0 +1,163 @@
+# 由 docs/context-and-streaming/13-porting-checklist.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: E2E
+title: "端到端验收"
+source: "docs/context-and-streaming/13-porting-checklist.md"
+count: 26
+assertions:
+  - id: A-E2E-01
+    group: ""
+    statement: "构造含全部消息类型 × 全部工具态的会话 → 序列化再反序列化后深相等"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-02
+    group: ""
+    statement: "前后端 import 的是同一个文件（不是两份复制）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-03
+    group: ""
+    statement: "加一个新 `type` 时，所有 `switch` 编译报错（穷尽性检查）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-04
+    group: ""
+    statement: "投影器抛错 → 事务回滚，事件不存在"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-E2E-05
+    group: ""
+    statement: "订阅者收到事件时，事件已在库里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-06
+    group: ""
+    statement: "`*.Delta` 事件不写库、不推进 seq"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-07
+    group: ""
+    statement: "一帧内 20 个 delta → reducer 只调 1 次"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-08
+    group: ""
+    statement: "一个 part 流式更新时，其它 part 组件不重渲染（Profiler 验证）"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-E2E-09
+    group: ""
+    statement: "主线程无 > 50ms 长任务"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-10
+    group: ""
+    statement: "模型跑工具期间发 steer → 下一轮就被提升"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-11
+    group: ""
+    statement: "queue 里有 3 条 → 分 3 个外层循环，每次一条"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-12
+    group: ""
+    statement: "并发 `run(sessionId)` → 只有一个 drain"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-E2E-13
+    group: ""
+    statement: "2001 行的工具输出 → 落盘 + 头尾采样 + 中间 marker"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-14
+    group: ""
+    statement: "UTF-8 截断不产生乱码"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-15
+    group: ""
+    statement: "工具 running 时不可展开"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-16
+    group: ""
+    statement: "连续 8 个 read → 折叠成一行 `Explored  8 reads`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-17
+    group: ""
+    statement: "未注册的工具 → 兜底渲染，不崩"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-18
+    group: ""
+    statement: "1000 条消息流式追加 → 稳定 60fps"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-E2E-19
+    group: ""
+    statement: "用户上滑 → 停止跟随；回到底部 10px 内 → 恢复"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-20
+    group: ""
+    statement: "向上加载历史 → 视口内容位置不变"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-21
+    group: ""
+    statement: "同一纪元内连续 3 轮，system 段**逐字节相同**"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-22
+    group: ""
+    statement: "改 `AGENTS.md` → 下一轮出现一条 system 消息，baseline 不变"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-23
+    group: ""
+    statement: "系统消息与快照推进同事务"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-E2E-24
+    group: ""
+    statement: "摘要失败 → 无任何痕迹，下轮重试"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-25
+    group: ""
+    statement: "压缩后 `baseline_seq === compaction 消息 seq`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-E2E-26
+    group: ""
+    statement: "条形图各段之和 === provider 报告的 `input`"
+    kind: unit
+    severity: must
+    status: pending

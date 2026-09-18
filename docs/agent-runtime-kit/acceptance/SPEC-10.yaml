@@ -1,0 +1,49 @@
+# 由 docs/context-and-streaming/14-tools.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-10
+title: "文件访问安全与并发"
+source: "docs/context-and-streaming/14-tools.md"
+count: 7
+assertions:
+  - id: A-10-01
+    group: "路径"
+    statement: "`../../etc/passwd` → `relative_escape`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-10-02
+    group: "路径"
+    statement: "项目内符号链接指向项目外，读它 → `location_escape`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-10-03
+    group: "路径"
+    statement: "内部路径的权限资源是相对路径；外部路径是绝对路径"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-10-04
+    group: "路径"
+    statement: "写一个不存在的深层路径 → 解析成功（锚定到最近的存在祖先）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-10-05
+    group: "并发"
+    statement: "两个 edit 并发改同一文件，基于同一份旧内容 → 第二个报 `StaleContentError`"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-10-06
+    group: "行尾"
+    statement: "编辑 CRLF 文件 → 写回后仍是 CRLF"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-10-07
+    group: "BOM"
+    statement: "编辑带 BOM 的文件 → BOM 保留且只有一个"
+    kind: unit
+    severity: must
+    status: pending

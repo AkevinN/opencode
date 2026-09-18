@@ -1,0 +1,109 @@
+# 由 docs/context-and-streaming/04-history-and-messages.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-01
+title: "消息与片段模型"
+source: "docs/context-and-streaming/04-history-and-messages.md"
+count: 17
+assertions:
+  - id: A-01-01
+    group: "M1"
+    statement: "给 `Message` 加一个新 type 后，`toLLMMessage` 的 switch 编译报错（穷尽性检查生效）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-02
+    group: "M2"
+    statement: "一条 assistant 消息含 `[text, tool, text, reasoning]` → 转换后顺序保持"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-03
+    group: "M3"
+    statement: "工具从 pending 走到 completed，每一步的 `input` 类型符合定义（pending 是 string，其余是对象）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-04
+    group: "M4"
+    statement: "造一条 seq < compaction.seq 的 user 消息 → 不在 `entriesForRunner` 结果里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-05
+    group: "M4"
+    statement: "造一条 seq ≤ baseline_seq 的 system 消息 → 不在结果里；seq > baseline_seq 的在"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-06
+    group: "M4"
+    statement: "压缩点之后、纪元未替换时的 system 消息 → 仍在结果里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-07
+    group: "M5"
+    statement: "上述被过滤的消息，`SELECT` 原表仍能查到"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-08
+    group: "M6"
+    statement: "`agent-switched` / `model-switched` → `toLLMMessage` 返回 `[]`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-09
+    group: "M7"
+    statement: "用 A 模型产生 reasoning，切到 B 模型 → reasoning 变成 `{type:\"text\"}`，无 providerMetadata"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-10
+    group: "M7"
+    statement: "同模型续接 → reasoning 保留 `providerMetadata`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-11
+    group: "M7"
+    statement: "消息带 `error` 且同模型 → `providerMetadata` 仍被剥掉"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-12
+    group: "M8"
+    statement: "本地工具（`provider.executed !== true`）→ 结果是独立的 tool 消息，排在 assistant 之后"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-13
+    group: "M8"
+    statement: "provider 执行的工具 → 调用+结果都在 assistant 的 content 里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-14
+    group: "空消息"
+    statement: "assistant 只有工具无文本 → 不产生空 content 的 assistant 消息"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-15
+    group: "空 reasoning"
+    statement: "文本空但有 providerMetadata → 保留"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-16
+    group: "往返"
+    statement: "8 种消息 × 4 种工具态全覆盖的会话，序列化再反序列化后深相等"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-01-17
+    group: "排序"
+    statement: "同一毫秒创建的两条消息，按 `seq` 稳定排序"
+    kind: unit
+    severity: must
+    status: pending

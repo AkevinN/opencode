@@ -1,0 +1,67 @@
+# 由 docs/context-and-streaming/14-tools.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-09
+title: "权限与授权"
+source: "docs/context-and-streaming/14-tools.md"
+count: 10
+assertions:
+  - id: A-09-01
+    group: "权限"
+    statement: "无任何规则时 → 判定为 `ask`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-09-02
+    group: "权限"
+    statement: "agent 有 `{action:\"bash\", resource:\"*\", effect:\"deny\"}`，用户先前保存过 `allow bash *` → 仍然 deny"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-09-03
+    group: "权限"
+    statement: "一次 assert 带 3 个 resource，其中 1 个 deny → 整体 deny"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-09-04
+    group: "权限"
+    statement: "找不到 agent → 全部 deny"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-09-05
+    group: "权限"
+    statement: "通配符 `git commit *` 匹配裸 `git commit`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-09-06
+    group: "权限"
+    statement: "Windows 路径 `src\\index.ts` 匹配模式 `src/*`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-09-07
+    group: "传染"
+    statement: "同会话 3 个 pending，拒绝其一 → 3 个全部拒绝"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-09-08
+    group: "传染"
+    statement: "点「总是允许 read *」→ 其余 read 的 pending 自动放行，bash 的不放行"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-09-09
+    group: "中断语义"
+    statement: "用户拒绝 → 整个 drain 停止；用户拒绝并留言 → 变成工具错误文本回给模型"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-09-10
+    group: "save 分离"
+    statement: "read 批准一次后，读另一个文件不再询问；bash 批准一条命令后，另一条命令仍然询问"
+    kind: unit
+    severity: must
+    status: pending

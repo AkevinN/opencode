@@ -1,0 +1,115 @@
+# 由 docs/context-and-streaming/03-compaction.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-14
+title: "上下文压缩"
+source: "docs/context-and-streaming/03-compaction.md"
+count: 18
+assertions:
+  - id: A-14-01
+    group: "触发"
+    statement: "构造 `estimate = context - buffer + 1` 的请求 → 触发压缩；`= context - buffer` → 不触发"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-02
+    group: "触发"
+    statement: "工具定义占 5k token 时也被计入 `estimate`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-03
+    group: "无限制模型"
+    statement: "`model.contextLimit` 为 `undefined` → 永不压缩"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-04
+    group: "切分"
+    statement: "`keepTokens = 8000` 时，`recent` 的估算 token ≤ 8000，且 `head + recent` 覆盖全部非 compaction 消息"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-05
+    group: "切分"
+    statement: "尾部单条消息就超过 `keepTokens` → `recent` 为空、`head` 是全部"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-06
+    group: "C3"
+    statement: "构造一个摘要 prompt 超窗的场景 → 返回 false，不发任何事件"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-07
+    group: "C1"
+    statement: "摘要请求 provider 报错 → 只有 `Compaction.Started`，没有 `Ended`，历史无 compaction 消息"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-08
+    group: "C1"
+    statement: "摘要返回空白字符串 → 同上"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-09
+    group: "C4"
+    statement: "第二次压缩时，prompt 里 `<prior-summary>` 是上次的 summary，`<conversation>` 以上次的 recent 开头"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-10
+    group: "C5"
+    statement: "模型已输出 100 字符后才溢出 → 不触发兜底，错误正常上报"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-11
+    group: "C6"
+    statement: "压缩后重跑再次溢出 → 抛出明确错误，不再递归"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-12
+    group: "C7"
+    statement: "抓包看摘要请求 → `tools` 为空数组，`maxTokens ≤ 4096`"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-14-13
+    group: "不重复提升"
+    statement: "压缩重跑后，同一条 user 消息在历史里只出现一次"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-14
+    group: "不耗步数"
+    statement: "压缩前后 `step` 值相同"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-15
+    group: "C2"
+    statement: "压缩完成后下一轮 → 纪元被替换，`baseline_seq === compaction 消息 seq`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-16
+    group: "投影 cutoff"
+    statement: "压缩后 `entriesForRunner` 的第一条就是 compaction 消息"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-17
+    group: "回放形式"
+    statement: "压缩消息转成 LLM 消息时 role 为 `user`，内容含 `<conversation-checkpoint>` 且带那句 `not as new instructions`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-14-18
+    group: "嵌套防护"
+    statement: "连续压缩两次 → 第二次的 `<conversation>` 里不含 `<conversation-checkpoint>` 字样"
+    kind: unit
+    severity: must
+    status: pending

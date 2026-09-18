@@ -1,0 +1,115 @@
+# 由 docs/context-and-streaming/06-tool-output.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-11
+title: "工具输出治理"
+source: "docs/context-and-streaming/06-tool-output.md"
+count: 18
+assertions:
+  - id: A-11-01
+    group: "T1"
+    statement: "2001 行、10KB 的输出 → 触发落盘（行数超限）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-02
+    group: "T1"
+    statement: "100 行、51KB 的输出 → 触发落盘（字节超限）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-03
+    group: "T1"
+    statement: "2000 行、50KB 整 → **不**触发（边界是 `<=`）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-04
+    group: "T2"
+    statement: "截断后的文本同时包含原文首行和末行，中间有 marker"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-05
+    group: "T2"
+    statement: "marker 里的路径指向的文件内容 === 原始完整输出"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-06
+    group: "UTF-8 安全"
+    statement: "输出是 60KB 纯中文 → 截断后无乱码字符，能正常 `JSON.parse` 往返"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-07
+    group: "UTF-8 安全"
+    statement: "输出末尾是 emoji → `takeSuffix` 不切出半个代理对"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-08
+    group: "T3"
+    statement: "输出含 1 张图 + 100 行文本 → 图片原样保留在 content 里，不计入字节判定"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-09
+    group: "structured 完整"
+    statement: "超限时 `output.structured` 与输入完全相同"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-10
+    group: "空 content"
+    statement: "只有 structured 的输出 → 用其 JSON 参与上限判定"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-11
+    group: "T4"
+    statement: "连续 100 次落盘 → 100 个不同文件，无覆盖"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-12
+    group: "T4"
+    statement: "手工预创建同名文件 → `wx` 失败并抛 `StorageError`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-13
+    group: "T5"
+    statement: "造一个 8 天前 mtime 的 `tool_xxx` → 清理后消失"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-14
+    group: "T5"
+    statement: "造一个 6 天前的 → 保留"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-15
+    group: "T5"
+    statement: "造一个 `other_file` → 永不被删"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-16
+    group: "极小预算"
+    statement: "`maxLines = 2` → 返回值只含 marker，不抛错"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-17
+    group: "T6"
+    statement: "配置 `tool_output.max_lines = 500` → 501 行即触发"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-11-18
+    group: "传导"
+    statement: "落盘后 `ToolStateCompleted.outputPaths` 含该路径，SSE 事件里也有"
+    kind: unit
+    severity: must
+    status: pending

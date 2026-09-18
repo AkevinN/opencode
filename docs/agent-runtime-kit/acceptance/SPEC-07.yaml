@@ -1,0 +1,103 @@
+# 由 docs/context-and-streaming/05-input-and-drain.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-07
+title: "输入编排与执行循环"
+source: "docs/context-and-streaming/05-input-and-drain.md"
+count: 16
+assertions:
+  - id: A-07-01
+    group: "P1"
+    statement: "同一个 id 连续 POST 三次 → 收件箱只有一行，返回同一条"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-02
+    group: "P1"
+    statement: "并发 POST 同一个 id → 同上，无异常"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-07-03
+    group: "P2"
+    statement: "在「UPDATE promoted_seq」和「INSERT user 消息」之间人为抛错 → 两者都不生效"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-04
+    group: "P3"
+    statement: "模型跑工具期间连续发 3 条 steer，其中第 3 条在 cutoff 之后到达 → 本轮只提升前 2 条"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-05
+    group: "P4"
+    statement: "queue 里有 3 条 → 每个外层循环只提升 1 条，共跑 3 个外层"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-06
+    group: "P5"
+    statement: "一个边界提升 2 条 steer → `step` 只重置一次（值为 1，不是 -1 或跳变）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-07
+    group: "P6"
+    statement: "并发调 `run(sessionId)` 两次 → 只有一个 drain 在跑，第二个等待"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-07-08
+    group: "P6"
+    statement: "不同 sessionId 并发 → 各自独立跑，互不阻塞"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-07-09
+    group: "P7"
+    statement: "受理后立刻 kill 进程，重启 → 该输入仍 pending，drain 后正常提升"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-07-10
+    group: "P8"
+    statement: "手工把某行 `promoted_seq` 置为非 NULL → 后续提升跳过它"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-11
+    group: "崩溃清理"
+    statement: "造一条 running 状态的工具，重启后 drain → 该工具变成 error，历史无悬空 tool_call"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-07-12
+    group: "继续判定"
+    statement: "模型返回工具调用 → `needsContinuation = true`；纯文本 → `false`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-13
+    group: "插话兜底"
+    statement: "模型返回纯文本的同时收件箱有 steer → 继续跑而不是 idle"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-14
+    group: "wake 合并"
+    statement: "drain 期间连续 `wake` 5 次 → 结束后只跑一个后继 drain"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-15
+    group: "拒绝中断"
+    statement: "用户拒绝权限 → 整个 drain 中断，历史里没有「拒绝」作为工具输出"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-07-16
+    group: "乐观更新"
+    statement: "前端自生成 id 插入本地 → 服务端提升后的 user 消息 id 相同，UI 无重复无闪烁"
+    kind: unit
+    severity: must
+    status: pending

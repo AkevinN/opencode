@@ -1,0 +1,163 @@
+# 由 docs/context-and-streaming/16-memory.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-16
+title: "记忆分层"
+source: "docs/context-and-streaming/16-memory.md"
+count: 26
+assertions:
+  - id: A-16-01
+    group: "M1"
+    statement: "改 `AGENTS.md` → 下一轮出现一条系统消息，含 \"replace all previously loaded\" 和**全文**（不是 diff）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-02
+    group: "M1"
+    statement: "技能名录变化 → 消息含 \"supersedes the previous available skills list\""
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-16-03
+    group: "M1"
+    statement: "reference 名录变化 → 消息含 \"supersedes the previous reference list\""
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-04
+    group: "M2"
+    statement: "reference 的内容**不**在 system prompt 里，只有 name/path/description"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-05
+    group: "M2"
+    statement: "技能正文**不**在 system prompt 里，只有 name/description"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-06
+    group: "M3"
+    statement: "saved 规则的 effect 永远是 `allow`（查库验证）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-07
+    group: "M3"
+    statement: "在 A 项目保存的规则不影响 B 项目"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-08
+    group: "M3"
+    statement: "agent 配了 `deny bash *`，用户点过「总是允许 bash npm test」→ 仍然 deny"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-09
+    group: "M4"
+    statement: "模型传 3 条 todo，再传 2 条 → 库里正好 2 条（不是 5 条）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-10
+    group: "M4"
+    statement: "传空数组 → 库里 0 条，不报错"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-11
+    group: "M4"
+    statement: "todo 顺序与模型传入的数组顺序一致"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-12
+    group: "M5"
+    statement: "`AGENTS.md` 权限改成 000 → 返回 unavailable，system prompt 保持上一轮的内容不变"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-13
+    group: "M5"
+    statement: "`AGENTS.md` 被删除 → 走 `removed` 渲染（\"no longer apply\"），不是 unavailable"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-14
+    group: "M5"
+    statement: "全局 `AGENTS.md` 从来不存在 → 不影响项目级指令加载"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-15
+    group: "M6"
+    statement: "L1/L2/L4 的作用域是项目，不是会话（新开会话仍然生效）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-16
+    group: "L1"
+    statement: "从子目录启动 → 子目录和项目根的 `AGENTS.md` 都被加载，顺序为根在前"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-17
+    group: "L1"
+    statement: "在项目外的目录启动 → 只加载全局 `AGENTS.md`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-18
+    group: "L1"
+    statement: "设 `OPENCODE_DISABLE_PROJECT_CONFIG` → 只加载全局"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-19
+    group: "L2"
+    statement: "git reference 首次配置 → 会话立即可用（不等 clone 完成）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-20
+    group: "L2"
+    statement: "git clone 失败 → 记警告，其它 reference 与会话不受影响"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-21
+    group: "L2"
+    statement: "reference 无 description → 不进上下文"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-22
+    group: "L5"
+    statement: "`todowrite` 不在时间线渲染成工具卡片"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-23
+    group: "L5"
+    statement: "todo 变化推送 `todo.updated` 事件，UI dock 更新"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-24
+    group: "L5"
+    statement: "模型传 `status: \"done\"` → 接受，不报 schema 错误"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-25
+    group: "L6"
+    statement: "压缩后 L1/L2/L3 全部重新出现在新 baseline 里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-16-26
+    group: "跨层"
+    statement: "一次会话里同时触发 L1 加载、L3 加载、L4 写入、L5 写入 → 互不干扰"
+    kind: unit
+    severity: must
+    status: pending

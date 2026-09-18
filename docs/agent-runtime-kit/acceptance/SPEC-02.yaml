@@ -1,0 +1,145 @@
+# 由 docs/context-and-streaming/07-events-and-sse.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-02
+title: "事件模型与流式传输"
+source: "docs/context-and-streaming/07-events-and-sse.md"
+count: 23
+assertions:
+  - id: A-02-01
+    group: "E1"
+    statement: "连发 100 个 durable 事件 → seq 为 0..99，无空洞无重复"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-02
+    group: "E1"
+    statement: "两个会话并发发事件 → 各自 seq 独立从 0 开始"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-02-03
+    group: "E2"
+    statement: "让投影器抛错 → 事务回滚，`event` 表里没有该事件，`event_sequence` 未推进"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-02-04
+    group: "E2"
+    statement: "让 `commit` 钩子抛错 → 同上"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-05
+    group: "E3"
+    statement: "订阅者收到事件时，用另一个连接查库 → 该事件已存在"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-06
+    group: "E4"
+    statement: "用同一个 id publish 两次 → 第二次抛错"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-07
+    group: "E5"
+    statement: "重放 seq = latest + 2 → 抛错"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-08
+    group: "E5"
+    statement: "重放已存在且内容相同的 seq → 幂等成功，不重复插入"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-09
+    group: "E5"
+    statement: "重放已存在但内容不同的 seq → 抛「Replay diverged」"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-10
+    group: "E6"
+    statement: "publish 一个 `Text.Delta` → 订阅者收到，但 `event` 表无新行，`event_sequence` 未推进"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-11
+    group: "E7"
+    statement: "让某订阅者不消费，发 300 个事件 → 该订阅者被断开，其它订阅者正常"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-12
+    group: "E7"
+    statement: "慢订阅者不影响 publish 的耗时"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-13
+    group: "E8"
+    statement: "给 live-only 事件传 `commit` → 抛错"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-14
+    group: "flush"
+    statement: "provider 流在 `text-end` 之前断开 → `Text.Ended` 仍被发出，内容是已收到的部分"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-15
+    group: "协议校验"
+    statement: "构造 `tool-input-delta` 在 `tool-input-start` 之前 → 抛错并带 callID"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-16
+    group: "协议校验"
+    statement: "同一 callID 的 `name` 前后不一致 → 抛错并带新旧名字"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-17
+    group: "错误短路"
+    statement: "`provider-error` 之后再来 `text-delta` → 被丢弃，无事件发出"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-18
+    group: "串行"
+    statement: "两个工具同时返回 → 两个 `Tool.Success` 的 seq 相差 1，无冲突"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-19
+    group: "SSE"
+    statement: "连接建立后首帧是 `server.connected`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-20
+    group: "SSE"
+    statement: "静默 20 秒后收到至少一次 `: heartbeat`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-21
+    group: "SSE"
+    statement: "断线后 250ms 重连，先收到 `server.connected` 再拉全量，期间无事件丢失"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-02-22
+    group: "token 口径"
+    statement: "`input` 不含缓存命中部分；`cache.read` / `cache.write` 单独有值"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-02-23
+    group: "token 口径"
+    statement: "provider 回 `null` usage → 各项为 0，不是 `NaN`"
+    kind: unit
+    severity: must
+    status: pending

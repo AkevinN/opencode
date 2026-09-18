@@ -1,0 +1,97 @@
+# 由 docs/context-and-streaming/12-context-usage-ui.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-17
+title: "上下文用量可视化"
+source: "docs/context-and-streaming/12-context-usage-ui.md"
+count: 15
+assertions:
+  - id: A-17-01
+    group: "U1"
+    statement: "会话有 5 条 assistant 消息 → 用量取最后一条的，不是累加"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-02
+    group: "U1"
+    statement: "最后一条 assistant 失败（token 全 0）→ 往前取上一条有效的"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-03
+    group: "U1"
+    statement: "没有任何有效 assistant 消息 → 返回 `undefined`，面板显示空态"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-04
+    group: "U2"
+    statement: "各段 `width` 之和 === 100（浮点误差内）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-05
+    group: "U2"
+    statement: "各段 `tokens` 之和 === provider 报告的 `input`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-06
+    group: "U3"
+    statement: "估算 < 实际 → `other` = 差额，其余项保持估算值"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-07
+    group: "U3"
+    statement: "估算 > 实际（灌入大量中文）→ 各项按比例缩小，总和仍等于 `input`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-08
+    group: "U4"
+    statement: "某分类为 0 → 不出现在条形图和图例里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-09
+    group: "U5"
+    statement: "`limit` 缺失 → 占用率显示 `—`，不是 `NaN%` 或 `Infinity%`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-10
+    group: "U5"
+    statement: "数字带千分位，且随语言环境变化"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-11
+    group: "零输入"
+    statement: "`input === 0` → 返回空数组，不抛错"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-12
+    group: "pending 工具"
+    statement: "工具还在 pending → 用 `state.raw.length`，不访问 `state.output`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-13
+    group: "性能"
+    statement: "500 条消息的会话流式期间 → breakdown 不在每帧重算（打点验证）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-14
+    group: "无障碍"
+    statement: "堆叠条有 `role=\"img\"` 和描述性 `aria-label`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-17-15
+    group: "主题"
+    statement: "切换深浅色 → 配色跟随，对比度仍然可读"
+    kind: unit
+    severity: must
+    status: pending

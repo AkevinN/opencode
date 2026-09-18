@@ -1,0 +1,145 @@
+# 由 docs/context-and-streaming/15-skills.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-15
+title: "技能系统"
+source: "docs/context-and-streaming/15-skills.md"
+count: 23
+assertions:
+  - id: A-15-01
+    group: "K1"
+    statement: "两个目录都有 `pdf` 技能 → 后加载的生效"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-02
+    group: "K2"
+    statement: "无 `description` 的技能 → 不在 `<available_skills>` 里，但 `skill({name})` 能加载"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-15-03
+    group: "K3"
+    statement: "新增一个技能后下一轮 → 出现一条系统消息，含 `supersedes` 字样和完整新名录"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-04
+    group: "K3"
+    statement: "名录内容不变时 → 不产生系统消息"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-05
+    group: "K4"
+    statement: "agent 配 `deny skill *` + `allow skill pdf` → 名录里只有 pdf"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-15-06
+    group: "K4"
+    statement: "agent 完全 `deny skill *` → 名录为 `SystemContext.empty`（system prompt 里完全没有技能段）"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-15-07
+    group: "K5"
+    statement: "远程索引技能名为 `../evil` → 该技能被丢弃"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-08
+    group: "K5"
+    statement: "远程文件路径为 `%2e%2e%2fevil` → 整个技能被丢弃"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-09
+    group: "K5"
+    statement: "远程文件 URL 指向另一个域名 → 整个技能被丢弃"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-10
+    group: "K5"
+    statement: "索引里没有 `SKILL.md` 也没有 `<name>.md` → 该技能被丢弃"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-11
+    group: "K6"
+    statement: "版本更新时某文件 404 → 旧版本完好保留"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-12
+    group: "K6"
+    statement: "rename 失败 → backup 被还原"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-13
+    group: "K6"
+    statement: "任意失败路径下 staging 目录都被清理"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-14
+    group: "K7"
+    statement: "连续调 `list()` 10 次 → 只读盘一次"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-15
+    group: "K8"
+    statement: "技能目录有 50 个文件 → 清单只有 10 个，且输出含 `Note: file list is sampled.`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-16
+    group: "K8"
+    statement: "扁平布局技能（`pdf.md`）→ 文件清单为空"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-17
+    group: "排序确定性"
+    statement: "打乱来源注册顺序 → 名录文本逐字节相同"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-18
+    group: "容错"
+    statement: "frontmatter 值含未引号冒号 → 正常加载"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-19
+    group: "容错"
+    statement: "目录里放一个空的 `.md` → 跳过，其余技能正常"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-20
+    group: "容错"
+    statement: "子目录 `SKILL.md` 无 `name` → 跳过，不产生名为 `SKILL` 的技能"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-21
+    group: "协议校验"
+    statement: "配置里写 `file:///etc` → 不被当作 URL 来源"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-22
+    group: "权限传播"
+    statement: "用户对 pdf 点「总是允许」→ 加载 docx 时仍然询问"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-15-23
+    group: "输出模板"
+    statement: "加载后的输出含 base directory 绝对路径、相对路径说明、sampled 提示、文件清单四要素"
+    kind: unit
+    severity: must
+    status: pending

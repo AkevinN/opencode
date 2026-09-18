@@ -1,0 +1,181 @@
+# 由 docs/context-and-streaming/10-rendering-parts.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-05
+title: "过程渲染"
+source: "docs/context-and-streaming/10-rendering-parts.md"
+count: 29
+assertions:
+  - id: A-05-01
+    group: "V1"
+    statement: "一次性注入 5000 字符 → 8 帧内追平，不是逐字打半分钟"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-02
+    group: "V1"
+    statement: "每次追加 3 字符（正常流式）→ 立刻全量显示，无额外延迟"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-03
+    group: "V1"
+    statement: "落后正好 512 字符 → 全量；513 → 走节奏"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-04
+    group: "V1"
+    statement: "内容被替换（非前缀追加）→ 立刻全量同步"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-05
+    group: "V1"
+    statement: "`live = false`（生成结束）→ 立刻全量，无残留 timer"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-06
+    group: "V2"
+    statement: "步进位置落在空白或 `.,!?;:)]` 之后，不切断单词"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-07
+    group: "V2"
+    statement: "向后 8 字符内没有边界字符 → 就按原位置切（不无限找）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-08
+    group: "V3"
+    statement: "工具 running 时点击标题 → 不展开"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-09
+    group: "V3"
+    statement: "`allowOpenWhilePending` 为 true 时 → 可展开"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-10
+    group: "V3"
+    statement: "`locked` 为 true 时 → 可展开不可收起"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-11
+    group: "V4"
+    statement: "`Searching` ↔ `Searched` → 前缀 `Search` 不动，只有后缀交叉淡入"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-12
+    group: "V4"
+    statement: "`Reading` ↔ `Read`（done 后缀为空）→ 走 swap 模式，整体淡入"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-13
+    group: "V4"
+    statement: "切换期间宽度平滑过渡，600ms 后恢复 `auto`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-14
+    group: "V4"
+    statement: "屏幕阅读器读到完整文案，不是拆分碎片"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-05-15
+    group: "V5"
+    statement: "`read` 工具 → 默认折叠"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-16
+    group: "V5"
+    statement: "`edit` 且用户开启 editToolDefaultOpen → 展开"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-17
+    group: "V5"
+    statement: "纯删除的 patch（`additions === 0 && deletions > 0`）→ 即使开启也不展开"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-18
+    group: "V5"
+    statement: "多文件 patch 且全部 `type === \"delete\"` → 同上"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-19
+    group: "V6"
+    statement: "同时挂载 20 个默认展开的工具 → 每帧一个，无长任务"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-20
+    group: "V6"
+    statement: "挂载顺序从底部开始（视口内的先可交互）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-21
+    group: "V6"
+    statement: "组件卸载后其挂载任务不执行"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-22
+    group: "V7"
+    statement: "开启系统\"减少动态效果\" → 点阵停止动画，中心点保持可见"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-23
+    group: "计数"
+    statement: "`3 reads, 2 searches` → 逗号是淡入的，不是突然出现"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-24
+    group: "计数"
+    statement: "计数为 0 的项不显示，但 DOM 节点存在"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-25
+    group: "兜底"
+    statement: "未注册的 MCP 工具 → `Called \\`xxx\\`` + mcp 图标，不崩溃"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-05-26
+    group: "特判"
+    statement: "进行中的 `question` → 时间线不显示卡片"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-27
+    group: "特判"
+    statement: "被忽略的 question → 右对齐灰字，不是红色错误卡"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-28
+    group: "元信息"
+    statement: "只有最后一个文本 part 显示 `Agent · Model · 耗时`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-05-29
+    group: "展开动画"
+    statement: "展开后内部的下拉菜单不被 `overflow: hidden` 裁掉"
+    kind: unit
+    severity: must
+    status: pending

@@ -1,0 +1,97 @@
+# 由 docs/context-and-streaming/01-system-context.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-12
+title: "系统上下文来源"
+source: "docs/context-and-streaming/01-system-context.md"
+count: 15
+assertions:
+  - id: A-12-01
+    group: "I1"
+    statement: "用同一个 key 注册两次 → 抛错，且错误信息里带 key"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-02
+    group: "I2"
+    statement: "打乱来源注册顺序，`initialize` 产出的 `baseline` 字符串逐字节相同"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-03
+    group: "I2"
+    statement: "让某来源的 `load` 人为延迟 100ms，`baseline` 中它的位置不变"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-04
+    group: "I3"
+    statement: "某来源 `baseline` 返回 `\"\"` → 抛错，错误信息含来源 key 和 `\"baseline\"`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-05
+    group: "I4"
+    statement: "一个 `Source<string>` 和一个 `Source<{a: number}[]>` 能被 `combine` 到一起并正常渲染"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-06
+    group: "I5"
+    statement: "来源第二次 `load` 返回 `UNAVAILABLE` → `reconcile` 返回 `Unchanged`，快照里该 key 的值保持不变"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-07
+    group: "I5"
+    statement: "来源从未成功读过且返回 `UNAVAILABLE` → 快照里不出现该 key"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-08
+    group: "I6"
+    statement: "模拟持久化失败 → 快照未推进；下次 `reconcile` 仍返回相同的 `Updated.text`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-09
+    group: "I7"
+    statement: "运行中新注册一个来源 → 下次 `reconcile` 返回 `Updated`，文本是该来源的 `baseline()` 输出"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-10
+    group: "I8"
+    statement: "注销一个有 `removed` 的来源 → `Updated`，文本是预渲染的移除文本，且该 key 从快照消失"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-11
+    group: "I8"
+    statement: "注销一个没有 `removed` 的来源 → `ReplacementReady`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-12
+    group: "I9"
+    statement: "手工把快照里某 key 的 `value` 改成不符合 codec 的形状 → `ReplacementReady`（或在有来源不可用时 `ReplacementBlocked`）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-13
+    group: "重建守门"
+    statement: "某来源不可用 **且** 它在旧快照里 → `ReplacementBlocked`；不在旧快照里 → `ReplacementReady`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-14
+    group: "合并"
+    statement: "同一次 `reconcile` 中两个来源都变化 → 返回**一个** `Updated`，`text` 中两段以 `\"\\n\\n\"` 分隔，顺序按 key 字典序"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-12-15
+    group: "无变化零成本"
+    statement: "所有来源值不变 → `Unchanged`，且期间没有调用过任何 `update()` 渲染函数"
+    kind: unit
+    severity: must
+    status: pending

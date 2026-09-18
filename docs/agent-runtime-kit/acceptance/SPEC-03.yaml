@@ -1,0 +1,127 @@
+# 由 docs/context-and-streaming/08-client-sync.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-03
+title: "客户端同步层"
+source: "docs/context-and-streaming/08-client-sync.md"
+count: 20
+assertions:
+  - id: A-03-01
+    group: "S1"
+    statement: "乱序投递 100 条消息事件 → store 里按 id 有序，无重复"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-02
+    group: "S1"
+    statement: "插入操作是 O(log n) 定位（不是先 push 再 sort）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-03
+    group: "S2"
+    statement: "收到 5 个 delta 后再收 `message.part.updated` → `partTextAccumDelta[partId]` 被删除，part 内容 === 权威值"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-04
+    group: "S2"
+    statement: "delta 先于 part 到达 → 被丢弃，不抛错，不产生占位对象"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-05
+    group: "S3"
+    statement: "一帧内 20 个同 part 的 delta → reducer 只被调用 1 次"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-06
+    group: "S3"
+    statement: "一帧内 5 个同 part 的 `updated` → 只有最后一个进队列"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-07
+    group: "S3"
+    statement: "不同 part 的 delta 交替到达 → **不**被合并"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-08
+    group: "S4"
+    statement: "在 `apply` 回调里再投递事件 → 不丢失，下一帧处理"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-09
+    group: "S5"
+    statement: "连续投递 10000 个事件 → 主线程无 > 50ms 的长任务（Performance 面板可验）"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-03-10
+    group: "S6"
+    statement: "断开 SSE → 250ms 后自动重连"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-03-11
+    group: "S6"
+    statement: "重连后收到 `server.connected` → 触发全量拉取"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-03-12
+    group: "S6"
+    statement: "断线期间后端产生 3 条消息 → 重连后 UI 完整显示这 3 条"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-03-13
+    group: "S6"
+    statement: "快速 stop → start → 只有一个读流循环在跑（打日志验证）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-14
+    group: "S6"
+    statement: "浏览器前进/后退（bfcache）→ 连接正确恢复"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-15
+    group: "S7"
+    statement: "打开 35 个目录 → store 数量稳定在 30"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-16
+    group: "S7"
+    statement: "某目录 20 分钟无访问 → 被驱逐"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-17
+    group: "S7"
+    statement: "正在 bootstrap 的目录 → 不被驱逐"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-18
+    group: "S7"
+    statement: "会话被裁剪 → 其 message / part / todo / permission / question / status / diff 七处缓存全部清空"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-19
+    group: "S7"
+    statement: "有待处理权限的子会话 → 即使超出上限也保留"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-03-20
+    group: "渲染"
+    statement: "一个 part 流式更新时，其它 part 的组件不重渲染（React DevTools Profiler 可验）"
+    kind: manual
+    severity: must
+    status: pending

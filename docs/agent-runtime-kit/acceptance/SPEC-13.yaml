@@ -1,0 +1,91 @@
+# 由 docs/context-and-streaming/02-context-epoch.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-13
+title: "上下文纪元"
+source: "docs/context-and-streaming/02-context-epoch.md"
+count: 14
+assertions:
+  - id: A-13-01
+    group: "E1"
+    statement: "同一会话并发调两次 `initializeEpoch` → 只产生一行"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-13-02
+    group: "E2"
+    statement: "触发一次来源变化后再取 `baseline` → 与变化前**逐字节相同**"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-03
+    group: "E2"
+    statement: "同一纪元内连续 3 轮请求，抓包看 system 段完全一致（provider 缓存命中率可验证）"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-13-04
+    group: "E3"
+    statement: "造一条 seq ≤ `baseline_seq` 的 `system` 消息 → 不出现在 `entriesForRunner` 结果里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-05
+    group: "E3"
+    statement: "造一条 seq > `baseline_seq` 的 `system` 消息 → 出现在结果里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-06
+    group: "E4"
+    statement: "在快照更新语句后人为抛错 → 事务回滚，system 消息也不存在；重跑 `prepare` 再次得到相同的 `Updated.text`"
+    kind: integration
+    severity: must
+    status: pending
+  - id: A-13-07
+    group: "E5"
+    statement: "首轮 `initialize` 后查事件表 → 没有 `ContextUpdated` 事件"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-08
+    group: "E6"
+    statement: "让某来源首轮不可用 → 纪元表**无行**，且此前提交的输入 `promoted_seq` 仍为 `NULL`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-09
+    group: "E7"
+    statement: "触发压缩后调 `prepare` → 走 replace 分支，且新 `baseline_seq === compaction 消息的 seq`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-10
+    group: "E7"
+    statement: "压缩后紧接着又产生了 2 条事件，再 `prepare` → `baseline_seq` 仍等于压缩消息 seq，不是最新 seq"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-11
+    group: "E8"
+    statement: "迁移会话 → 纪元行被删；下轮 `initialize` 建出全新 baseline"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-12
+    group: "E9"
+    statement: "在 provider 流式过程中修改 `AGENTS.md` → 本轮请求不受影响；下一轮才出现 system 消息"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-13
+    group: "顺序"
+    statement: "一轮里同时有新输入和上下文变化 → 历史中顺序为 user → system → assistant"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-13-14
+    group: "幂等"
+    statement: "连续两次 `prepare` 且期间世界未变 → 第二次返回 `Unchanged`，不产生第二条 system 消息"
+    kind: unit
+    severity: must
+    status: pending

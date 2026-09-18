@@ -1,0 +1,139 @@
+# 由 docs/context-and-streaming/11-streaming-markdown.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-06
+title: "流式 Markdown 管线"
+source: "docs/context-and-streaming/11-streaming-markdown.md"
+count: 22
+assertions:
+  - id: A-06-01
+    group: "M1"
+    statement: "一个已稳定的段落，在后续 100 次更新中 `raw` 不变，其组件不重渲染"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-02
+    group: "M2"
+    statement: "`text` 不是 `previous.text` 的前缀 → 整体重算（不产生错误拼接）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-03
+    group: "M2"
+    statement: "尾块是未闭合代码块且新内容不闭合 → 走 O(1) 快路径（性能可测：不调用 lexer）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-04
+    group: "M3"
+    statement: "同一个块连续发 10 次请求 → worker 最多执行 2 次（在途 1 + 最新 1）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-05
+    group: "M3"
+    statement: "期间收到 8 次 `superseded` 响应"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-06
+    group: "M4"
+    statement: "人为乱序投递两个 highlight 响应 → 旧 id 的被丢弃"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-07
+    group: "M5"
+    statement: "`reset: true` → stable 被替换；`reset: false` → stable 被追加"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-08
+    group: "M6"
+    statement: "`live` 由 true 变 false → 所有 live 块变 full，未完成 code 块 `complete: true`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-09
+    group: "引用定义"
+    statement: "文本含 `[foo]: http://x` → 整体当一个 live 块"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-10
+    group: "围栏"
+    statement: "` ```js ` 未闭合 → 尾块 `mode: \"code\"` 且无 `complete`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-11
+    group: "围栏"
+    statement: "4 个反引号开启、3 个反引号出现 → **不**算闭合"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-12
+    group: "围栏"
+    statement: "围栏标记跨两次 delta 被切开 → `closesFence` 正确识别"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-13
+    group: "缩进围栏"
+    statement: "3 空格缩进的 `` ``` `` → 识别；4 空格 → 不识别（是代码缩进）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-14
+    group: "修补"
+    statement: "`**bold` → 渲染出粗体，不显示 `**` 字面量"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-15
+    group: "修补"
+    statement: "`[text](htt` → 渲染成纯文本，不是可点击的坏链接"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-16
+    group: "未知语言"
+    statement: "` ```foobar ` → 退化成 text，不抛错"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-17
+    group: "换行"
+    statement: "全量 tokenize 一个 10 行代码块 → 渲染出 10 行（不是 1 行）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-18
+    group: "重置"
+    statement: "代码块内容被非前缀替换 → `shouldResetCodeTokens` 返回 true，token 整体重建"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-19
+    group: "key"
+    statement: "同一个 index 的块从 live 变 full → key 变化，状态不复用"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-20
+    group: "dispose"
+    statement: "组件卸载后 worker 内该 key 的 `streams` / `projections` 条目被删除"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-21
+    group: "顺序"
+    statement: "`dispose` 在同 key 的 `run` 之后执行（不会删掉正在用的状态）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-06-22
+    group: "性能"
+    statement: "一个 3000 字符含 500 行代码块的回答流式渲染 → 主线程无 > 16ms 长任务"
+    kind: unit
+    severity: must
+    status: pending

@@ -1,0 +1,169 @@
+# 由 docs/context-and-streaming/09-timeline-and-scroll.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-04
+title: "时间线投影与滚动"
+source: "docs/context-and-streaming/09-timeline-and-scroll.md"
+count: 27
+assertions:
+  - id: A-04-01
+    group: "R1"
+    statement: "流式期间连续 100 次重投影 → 未变化的行对象引用不变（`Object.is` 为 true）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-02
+    group: "R1"
+    statement: "所有行都未变 → 返回的数组本身也是同一个引用"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-03
+    group: "R1"
+    statement: "`React.memo` 的比较函数命中，未变行不重渲染（Profiler 可验）"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-04-04
+    group: "R2"
+    statement: "一个 context 组从 1 个成员增长到 5 个 → 组 key 全程不变"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-05
+    group: "R2"
+    statement: "两个新 context 组都能反查到同一个旧组 → 只有一个认领成功"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-06
+    group: "turn 分组"
+    statement: "assistant 消息先于其 user 消息到达 → 仍归入正确的 turn"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-07
+    group: "turn 分组"
+    statement: "本地乐观插入的 user 消息 → 按 id 序插入正确位置"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-08
+    group: "行顺序"
+    statement: "一个含压缩 + 中断 + 错误的轮次 → 行顺序为 TurnGap → UserMessage → TurnDivider(compaction) → parts → TurnDivider(interrupted) → parts → Error"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-09
+    group: "Thinking"
+    statement: "`showReasoning=true` 且已有 part → 不显示 Thinking 行"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-10
+    group: "Thinking"
+    statement: "`showReasoning=false` 且 busy → 显示 Thinking 行"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-11
+    group: "DiffSummary"
+    statement: "当前轮 busy 时 → 不显示；idle 后显示"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-12
+    group: "中断 vs 错误"
+    statement: "`MessageAbortedError` → TurnDivider(interrupted)，不产生 Error 行"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-13
+    group: "折叠"
+    statement: "连续 8 个 read → 1 个 context 组行；中间插一个 bash → 变成 3 行"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-14
+    group: "R3"
+    statement: "用户上滑 → 停止跟随；滚回距底 10px 内 → 恢复跟随"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-15
+    group: "R3"
+    statement: "内容不足一屏 → `userScrolled` 强制为 false"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-16
+    group: "R4"
+    statement: "程序化 `scrollToEnd` 触发的 scroll 事件 → 不置 `userScrolled`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-17
+    group: "R4"
+    statement: "1500ms 后同样位置的 scroll 事件 → 判定为用户滚动"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-18
+    group: "嵌套滚动"
+    statement: "在 `[data-scrollable]` 内向上滚 → 外层继续跟随"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-19
+    group: "向下滚"
+    statement: "`deltaY > 0` → 不停止跟随"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-20
+    group: "R5"
+    statement: "向上加载 20 条历史 → 视口内容视觉位置不变（截图对比）"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-04-21
+    group: "R6"
+    statement: "贴底时某行变高 → 仍贴底，无跳动"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-22
+    group: "R6"
+    statement: "非贴底时视口**之上**的行变高 → 视口内容不动"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-23
+    group: "R6"
+    statement: "非贴底时视口**之下**的行变高 → 不补偿（视口不动）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-24
+    group: "巨幅变化"
+    statement: "展开一个高度 > 一屏的 diff → 无白屏闪烁"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-25
+    group: "首屏"
+    statement: "1000 条消息的会话打开 → 首次可交互 < 500ms"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-04-26
+    group: "性能"
+    statement: "1000 条消息流式追加 → 稳定 60fps，无 > 50ms 长任务"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-04-27
+    group: "key 策略"
+    statement: "在列表头部插入一条 → 其它行不重建（DevTools 可验）"
+    kind: manual
+    severity: must
+    status: pending

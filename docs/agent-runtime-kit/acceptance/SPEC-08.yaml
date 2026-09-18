@@ -1,0 +1,115 @@
+# 由 docs/context-and-streaming/14-tools.md 的验收清单抽取并重新编号。
+# 这是 SPEC 的可执行验收面；条款语义以对应 SPEC 文档为准。
+spec: SPEC-08
+title: "工具系统"
+source: "docs/context-and-streaming/14-tools.md"
+count: 18
+assertions:
+  - id: A-08-01
+    group: "T1"
+    statement: "无法从工具值上读到 `execute` / schema（`Object.keys(tool)` 为空）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-02
+    group: "T1"
+    statement: "传一个普通对象给 `settleTool` → 抛 `Invalid Tool value`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-03
+    group: "T2"
+    statement: "同名注册两次 → 生效的是后者"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-04
+    group: "T2"
+    statement: "后者作用域关闭 → 前者重新生效（不是变成 unknown）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-05
+    group: "T2"
+    statement: "一批注册中第 3 个名字非法 → 前 2 个也没被注册"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-06
+    group: "T3"
+    statement: "application 和 Location 同名 → Location 生效"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-07
+    group: "T4"
+    statement: "materialize 后热替换同名工具，再 settle → 返回 `Stale tool call`"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-08
+    group: "T4"
+    statement: "调用一个从未注册的名字 → 返回 `Unknown tool`（文案不同于 stale）"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-09
+    group: "T5"
+    statement: "规则 `{action:\"bash\", resource:\"*\", effect:\"deny\"}` → bash 不在 definitions 里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-10
+    group: "T5"
+    statement: "规则 `{action:\"bash\", resource:\"rm *\", effect:\"deny\"}` → bash **仍在** definitions 里"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-11
+    group: "T6"
+    statement: "注册表模块不 import 权限服务（依赖图可验证）"
+    kind: manual
+    severity: must
+    status: pending
+  - id: A-08-12
+    group: "T7"
+    statement: "模型传 `{path: 123}` → 收到 `Invalid tool input: ...`，不崩"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-13
+    group: "T7"
+    statement: "工具 execute 返回不符 output schema 的值 → 收到 schema 错误文本"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-14
+    group: "T8"
+    statement: "执行中触发中断 → 中断向上传播，不变成工具错误"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-15
+    group: "T8"
+    statement: "执行中抛非 `ToolFailure` 的异常 → 向上传播"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-16
+    group: "T9"
+    statement: "工具返回 3000 行输出 → 被 bound 截断且 `outputPaths` 非空"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-17
+    group: "T10"
+    statement: "注册名 `1abc` / `a`.repeat(65) / `a b` → 全部拒绝"
+    kind: unit
+    severity: must
+    status: pending
+  - id: A-08-18
+    group: "共享动作"
+    statement: "配置 `deny edit *` → `edit`/`write`/`apply_patch` 三个都从 definitions 消失"
+    kind: unit
+    severity: must
+    status: pending
